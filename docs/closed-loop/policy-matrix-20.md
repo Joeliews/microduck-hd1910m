@@ -52,7 +52,7 @@ XL330 `velstand` 的 Python 短评估仍是 `evidence/xl330-velstand-cpu-r1/`，
 
 ## HD-1910
 
-10 格全部未执行。官方 ONNX 是 XL330 权值；HD-1910 上的零样本、重训和 Rust 环都还没有。参数缺口见 `servo-hd1910.md`。后续只准备条件仿真，见 `hd1910-conditional-sim.md`。那不是实测辨识，也不是实机验收。不要把上表 XL330 的短评估抄到 HD-1910。
+10 格全部未执行，不是通过。下一步只是 7.4 V 制造商 BAM m6 上的条件仿真，见 `hd1910-conditional-sim.md` 和 `rounds/round-16.md`。那不是本机实测 ident，也不是实机验收。参数缺口见 `servo-hd1910.md` 与 `hd1910-pre-hardware-measurements.md`。不要把上表 XL330 的短评估抄到 HD-1910。
 
 | 策略 | ONNX / 合同 | MuJoCo 行为 | 零样本 | 重训检查点 | 导出数值对照 | Rust×MuJoCo 50 Hz |
 | --- | --- | --- | --- | --- | --- | --- |

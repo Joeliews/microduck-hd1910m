@@ -10,7 +10,8 @@
 | [version-freeze.md](version-freeze.md) | 官方 runtime 与官方 `microduck_rl` 版本冻结 |
 | [servo-xl330.md](servo-xl330.md) | XL330 参数冻结 |
 | [servo-hd1910.md](servo-hd1910.md) | HD-1910 参数冻结、谱系、待实测 |
-| [hd1910-conditional-sim.md](hd1910-conditional-sim.md) | HD-1910 条件仿真假设，不是实测，也不是验收 |
+| [hd1910-conditional-sim.md](hd1910-conditional-sim.md) | HD-1910 条件仿真假设，含 7.4 V 制造商 BAM m6 |
+| [hd1910-pre-hardware-measurements.md](hd1910-pre-hardware-measurements.md) | HD-1910 实机前待测，没有编造数值 |
 | [rounds/round-01.md](rounds/round-01.md) | 第 1 轮：Python 短评估 |
 | [rounds/round-02.md](rounds/round-02.md) | 第 2 轮：Rust 控制核心接 MuJoCo |
 | [rounds/round-03.md](rounds/round-03.md) | 第 3 轮：官方植物多种子零样本，未通过 |
@@ -26,6 +27,7 @@
 | [rounds/round-13.md](rounds/round-13.md) | 第 13 轮：官方植物闭环 ONNX 对照接线，尚未本机执行 |
 | [rounds/round-14.md](rounds/round-14.md) | 第 14 轮：官方植物闭环 ONNX 对照已记录，不是通过 |
 | [rounds/round-15.md](rounds/round-15.md) | 第 15 轮：官方评估路径盘点，不是一次评估 |
+| [rounds/round-16.md](rounds/round-16.md) | 第 16 轮：HD-1910 官方 BAM 先验与接线，不是跑程 |
 | [evidence/xl330-velstand-cpu-r1/](evidence/xl330-velstand-cpu-r1/) | Python CPU MuJoCo 短评估，未重跑 |
 | [evidence/xl330-velstand-rust-r1/](evidence/xl330-velstand-rust-r1/) | Rust `Policy::infer` + `mj_step` |
 

@@ -93,6 +93,6 @@ STS3215 规格书（飞特，2020-04-10，A/0）用于对照，避免把 JSON �
 
 ## 若要仿真，假设要写在旁边
 
-可以用规格书的堵转扭矩、额定电流和 ±10% 公差做先验，随机化范围先取规格已经写明的 ±10%，摩擦和延迟在有实测之前用更宽的范围并标成估计。这样跑出来的轨迹是「规格先验下的仿真」。它不填上表，也不能把 PPO 采样到的参数回写成辨识结果。
+规格书的堵转扭矩、额定电流和已经写明的 ±10% 仍是 4.8 / 6 / 7.4 V 的 spec 先验。7.4 V 的制造商 BAM m6 另记在 `hd1910-conditional-sim.md`，标记 `manufacturer_identified`：仓 `ftservo/ftservo-bam`，HEAD `bab3967811f0bec8b79898cb03e7f5812fe581f9`，文件 `bam/params/feetech_hd1910_7_4V/m6.json`，SHA256 `81a441fb921130bcc9bcfbd9ee0c77e3c38d9ab758bc7e0559fb029c436355ba`。这不是本机 15 颗的实测 ident。不要用自标 `sts3215` 的 JSON，不要用 XL330 m6，也不要写 armature `0.00224`。
 
-HD-1910 的 10 个策略格全部未执行。见 `policy-matrix-20.md`。条件仿真要用的假设写在 `hd1910-conditional-sim.md`，不把缺的辨识补上。
+HD-1910 的 10 个策略格全部未执行。见 `policy-matrix-20.md`。实机前还缺的量见 `hd1910-pre-hardware-measurements.md`。
