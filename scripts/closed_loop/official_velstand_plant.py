@@ -170,6 +170,22 @@ def scatter(action: list[float], index: dict[str, int], width: int):
     return out
 
 
+def processed_policy_action(term, index: dict[str, int]) -> list[float] | None:
+    """Plant action after env.step, in policy joint order.
+
+    This is not the ONNX output. Callers must not substitute it for the Rust action.
+    """
+    tensor = getattr(term, "processed_actions", None)
+    if tensor is None:
+        tensor = getattr(term, "_processed_actions", None)
+    if tensor is None:
+        return None
+    flat = as_list(tensor[0] if getattr(tensor, "ndim", 1) > 1 else tensor)
+    if any(index[name] >= len(flat) for name in POLICY_JOINTS):
+        return None
+    return [flat[index[name]] for name in POLICY_JOINTS]
+
+
 def action_joint_names(term) -> list[str]:
     """Names in JointPositionAction order.
 
@@ -244,12 +260,18 @@ def serve(host: str, port: int, device: str, seed: int) -> None:
                 env.reset()
                 send(sense(env))
             elif op == "step":
-                action = scatter(msg["action"], index, len(action_names)).to(env.device).unsqueeze(0)
+                raw_action = msg["action"]
+                action = scatter(raw_action, index, len(action_names)).to(env.device).unsqueeze(0)
                 started = time.perf_counter()
                 env.step(action)
                 env_step_ms = (time.perf_counter() - started) * 1e3
                 payload = sense(env)
                 payload["env_step_ms"] = env_step_ms
+                if msg.get("echo"):
+                    payload["received_action"] = [float(v) for v in raw_action]
+                    processed = processed_policy_action(term, index)
+                    if processed is not None:
+                        payload["processed_action"] = processed
                 send(payload)
             elif op == "close":
                 send({"ok": True})

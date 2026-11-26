@@ -43,16 +43,18 @@ fn run() -> Result<(), String> {
     let mut onnx = None;
     let mut addr = None;
     let mut out = None;
+    let mut compare = false;
     let mut args = env::args().skip(1);
     while let Some(arg) = args.next() {
         match arg.as_str() {
             "--onnx" => onnx = args.next(),
             "--addr" => addr = args.next(),
             "--out" => out = args.next(),
+            "--compare" => compare = true,
             other => return Err(format!("unknown argument {other}")),
         }
     }
-    let onnx = onnx.ok_or("usage: xl330_velstand_official_plant --onnx VELSTAND.onnx --addr HOST:PORT --out DIR")?;
+    let onnx = onnx.ok_or("usage: xl330_velstand_official_plant --onnx VELSTAND.onnx --addr HOST:PORT --out DIR [--compare]")?;
     let addr = addr.ok_or("missing --addr")?;
     let out = PathBuf::from(out.ok_or("missing --out")?);
     fs::create_dir_all(&out).map_err(|e| e.to_string())?;
@@ -115,6 +117,12 @@ fn run() -> Result<(), String> {
     let mut first_failure = Value::Null;
     let mut n_fail = 0usize;
     let mut exception = false;
+    let mut cmp_obs: Vec<Vec<f32>> = Vec::new();
+    let mut cmp_obs_bits: Vec<Vec<u32>> = Vec::new();
+    let mut cmp_action: Vec<Vec<f32>> = Vec::new();
+    let mut cmp_action_bits: Vec<Vec<u32>> = Vec::new();
+    let mut cmp_received: Vec<Value> = Vec::new();
+    let mut cmp_processed: Vec<Value> = Vec::new();
 
     for step in 0..steps {
         let q = read14(&state, "q")?;
@@ -140,8 +148,21 @@ fn run() -> Result<(), String> {
         let infer_elapsed = t0.elapsed().as_secs_f64() * 1e3;
         last_action = action;
         let t_rpc = Instant::now();
-        state = rpc(&mut reader, &mut writer, json!({"op": "step", "action": action}))?;
+        let step_msg = if compare {
+            json!({"op": "step", "action": action, "echo": true})
+        } else {
+            json!({"op": "step", "action": action})
+        };
+        state = rpc(&mut reader, &mut writer, step_msg)?;
         let rpc_elapsed = t_rpc.elapsed().as_secs_f64() * 1e3;
+        if compare {
+            cmp_obs.push(obs.as_slice().to_vec());
+            cmp_obs_bits.push(obs.as_slice().iter().map(|v| v.to_bits()).collect());
+            cmp_action.push(action.to_vec());
+            cmp_action_bits.push(action.iter().map(|v| v.to_bits()).collect());
+            cmp_received.push(optional_vector(&state, "received_action", 14));
+            cmp_processed.push(optional_vector(&state, "processed_action", 14));
+        }
         total_ms.push(t0.elapsed().as_secs_f64() * 1e3);
         infer_ms.push(infer_elapsed);
         round_trip_ms.push(rpc_elapsed);
@@ -177,7 +198,43 @@ fn run() -> Result<(), String> {
         "env_step_ms": env_step_ms.clone(),
     });
     fs::write(out.join("step_times.json"), serde_json::to_string_pretty(&step_times).unwrap() + "\n").map_err(|e| e.to_string())?;
-    let report = json!({
+    let compare_sha = if compare {
+        let dump = json!({
+            "status": "executed_not_acceptance",
+            "claim": "Closed-loop obs and Rust Policy::infer actions for a later Python ONNX Runtime replay. Not a numeric pass, not 20 ms acceptance, not a new plant trajectory.",
+            "obs_len": 61,
+            "action_len": 14,
+            "control_dt_s": CONTROL_DT,
+            "control_hz": 50,
+            "obs_layout": "0..3 gyro, 3..6 projected gravity, 6..20 q-home, 20..34 qd, 34..48 previous raw action, 48..61 command. Mouth excluded.",
+            "joint_order": POLICY_JOINTS.split(',').collect::<Vec<_>>(),
+            "normalization": "Policy::infer feeds this obs to the graph. Sub/Div live inside the published ONNX. The dump is not normalized again.",
+            "rust_infer_scale": 1.0,
+            "action_scale_note": "Policy::infer returns the raw network output and does not multiply by an action scale. The published velstand manifest action_scale is 1.0. sidecar_processed_action, when present, is the plant term after env.step and is not a substitute for rust_action.",
+            "onnx_sha256": sha,
+            "rejected_short_train_prefix": "cf280a27",
+            "plant": PLANT_ID,
+            "official_commit": hello.get("commit").cloned().unwrap_or(Value::Null),
+            "bam_lock": hello.get("bam_lock").cloned().unwrap_or(Value::Null),
+            "feedforward_contract": true,
+            "recurrent_state": false,
+            "recurrent_note": "The published velstand manifest is feedforward. This dump has no hidden state to replay. The Python compare checks the session inputs and does not invent a reset.",
+            "obs_f32_bits_endian": "little",
+            "step": (0..cmp_obs.len()).collect::<Vec<_>>(),
+            "obs": cmp_obs,
+            "obs_f32_bits": cmp_obs_bits,
+            "rust_action": cmp_action,
+            "rust_action_f32_bits": cmp_action_bits,
+            "sidecar_received_action": cmp_received,
+            "sidecar_processed_action": cmp_processed,
+        });
+        let path = out.join("step_compare.json");
+        fs::write(&path, serde_json::to_string_pretty(&dump).unwrap() + "\n").map_err(|e| e.to_string())?;
+        Some(sha256_file(path.to_str().ok_or("step_compare path is not utf-8")?)?)
+    } else {
+        None
+    };
+    let mut report = json!({
         "status": "executed_not_acceptance",
         "claim": "Rust Policy::infer drove the official BAM rough backlash sidecar. Not an acceptance pass, not the flat XML-PD loop, not a claim that this cloud VM ran the user's GPU.",
         "plant": hello,
@@ -212,6 +269,14 @@ fn run() -> Result<(), String> {
         "dropped_frame_policy": "logical ticks are not skipped; an overrun is a timeout, not a dropped physics step",
         "git_head": command_stdout("git", &["rev-parse", "HEAD"]),
     });
+    if let Some(compare_sha) = compare_sha {
+        report["step_compare"] = json!({
+            "file": "step_compare.json",
+            "sha256": compare_sha,
+            "status": "executed_not_acceptance",
+            "note": "SHA of the closed-loop dump. compare_report.json, when the wrapper runs it, is the Python replay and is still not a pass or 20 ms acceptance.",
+        });
+    }
     fs::write(out.join("metrics.json"), serde_json::to_string_pretty(&report).unwrap() + "\n").map_err(|e| e.to_string())?;
     println!("wrote {}", out.join("metrics.json").display());
     if exception {
@@ -229,6 +294,16 @@ fn rpc(reader: &mut BufReader<TcpStream>, writer: &mut TcpStream, msg: Value) ->
         return Err("sidecar closed the connection".into());
     }
     serde_json::from_str(&line).map_err(|e| e.to_string())
+}
+
+fn optional_vector(state: &Value, key: &str, width: usize) -> Value {
+    let Some(arr) = state.get(key).and_then(Value::as_array) else {
+        return Value::Null;
+    };
+    if arr.len() != width || arr.iter().any(|v| v.as_f64().is_none()) {
+        return Value::Null;
+    }
+    Value::Array(arr.clone())
 }
 
 fn read14(state: &Value, key: &str) -> Result<[f64; 14], String> {

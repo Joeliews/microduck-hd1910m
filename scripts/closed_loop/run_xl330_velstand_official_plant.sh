@@ -1,6 +1,9 @@
 #!/bin/bash
 # Short Rust loop against the official BAM + backlash + rough plant.
-# Does not train, does not modify the official checkout, and does not stop other agents.
+# COMPARE=1 also dumps step_compare.json and replays it with Python ONNX Runtime.
+# That replay does not step a second plant. COMPARE defaults to 0, so a timing run
+# does not write the dump. Does not train, does not modify the official checkout,
+# and does not stop other agents.
 # Ubuntu 22.04 on the user machine may not have rustc yet. Install rustup in the
 # user account only. Do not change Ubuntu 26.04, do not overwrite official-cu,
 # and do not kill AgentsDock.
@@ -22,14 +25,25 @@ if [[ -z "$PYTHON" ]]; then
   echo "Do not point it at the system interpreter." >&2
   exit 2
 fi
-ONNX="${ONNX:-/tmp/microduck-policies/velstand.onnx}"
-OUT="${OUT:-$HOME/microduck-loop/evidence/2026-11-26/official-velstand-rust-official-plant-r4}"
+ONNX="${ONNX:-}"
+if [[ -z "$ONNX" ]]; then
+  echo "Set ONNX to a verified copy of the published velstand.onnx." >&2
+  echo "SHA256 must be ce894d30b3343036d499bfac1102bdaa58d59a21c1b58401ecb70fb6a2f63e0a." >&2
+  echo "Do not rely on /tmp/microduck-policies/velstand.onnx." >&2
+  exit 2
+fi
+OUT="${OUT:-$HOME/microduck-loop/evidence/2026-11-26/official-velstand-rust-onnx-compare}"
 case "$(basename "$OUT")" in
-  official-velstand-rust-official-plant|official-velstand-rust-official-plant-r2|official-velstand-rust-official-plant-r3)
-    echo "refusing to overwrite r1, r2, or r3: $OUT" >&2
+  official-velstand-rust-official-plant|official-velstand-rust-official-plant-r2|official-velstand-rust-official-plant-r3|official-velstand-rust-official-plant-r4|official-velstand-zero-shot|official-velstand-official-weight-heldout-10-11-12)
+    echo "refusing to overwrite existing evidence: $OUT" >&2
     exit 2
     ;;
 esac
+COMPARE="${COMPARE:-0}"
+if [[ "$COMPARE" != "0" && "$COMPARE" != "1" ]]; then
+  echo "COMPARE must be 0 or 1." >&2
+  exit 2
+fi
 export ORT_DYLIB_PATH="${ORT_DYLIB_PATH:-}"
 if [[ -z "$ORT_DYLIB_PATH" ]]; then
   echo "Set ORT_DYLIB_PATH to libonnxruntime.so (floor 1.23)." >&2
@@ -58,5 +72,14 @@ if [[ -z "$PORT" ]]; then
   echo "sidecar did not become ready. See $OUT/sidecar.log" >&2
   exit 2
 fi
-"$ROOT/microduck/target/release/examples/xl330_velstand_official_plant" \
-  --onnx "$ONNX" --addr "127.0.0.1:$PORT" --out "$OUT"
+ARGS=(--onnx "$ONNX" --addr "127.0.0.1:$PORT" --out "$OUT")
+if [[ "$COMPARE" == "1" ]]; then
+  ARGS+=(--compare)
+fi
+"$ROOT/microduck/target/release/examples/xl330_velstand_official_plant" "${ARGS[@]}"
+if [[ "$COMPARE" == "1" ]]; then
+  "$PYTHON" "$ROOT/scripts/closed_loop/compare_velstand_onnx.py" \
+    --dump "$OUT/step_compare.json" \
+    --onnx "$ONNX" \
+    --out "$OUT/compare_report.json"
+fi
