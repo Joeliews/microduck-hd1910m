@@ -1,0 +1,128 @@
+{
+  "action_scale": 1.0,
+  "cases": {
+    "stand_push_0.3mps": {
+      "action_abs_max": 1.073024034500122,
+      "dropped_frames": 0,
+      "duration_s": 4.0,
+      "exception": false,
+      "fell": false,
+      "first_failure": null,
+      "height_m": {
+        "final": 0.1157769883644087,
+        "max": 0.12356642870152634,
+        "min": 0.1152978156291092
+      },
+      "home_minus_official_rounded_max_abs": 0.000040000000000000105,
+      "initial_joint_pos_rel_max_abs": 0.0,
+      "initial_obs_0_6": [
+        0.0,
+        0.0,
+        0.0,
+        -0.0,
+        -0.0,
+        -1.0
+      ],
+      "mujoco_warnings_during_case": 0,
+      "n_fail_steps": 0,
+      "push_vx_at_1s": 0.3,
+      "qpos_csv": "stand_push_0.3mps.qpos.csv",
+      "series_csv": "stand_push_0.3mps.series.csv",
+      "steps": 200,
+      "tilt_deg": {
+        "final": 0.3924767403505137,
+        "max": 3.665257026490328,
+        "p95": 2.380741804116803
+      },
+      "wall_clock_ms": {
+        "max": 0.362597,
+        "over_20ms": 0,
+        "p50": 0.162101,
+        "p95": 0.19421504999999997,
+        "p99": 0.23255672999999963,
+        "scope": "rust Policy::infer plus 4 mj_step calls; not the board"
+      }
+    },
+    "stand_zero": {
+      "action_abs_max": 0.21183715760707855,
+      "dropped_frames": 0,
+      "duration_s": 4.0,
+      "exception": false,
+      "fell": false,
+      "first_failure": null,
+      "height_m": {
+        "final": 0.1157697362842574,
+        "max": 0.11850648007622858,
+        "min": 0.1152978156291092
+      },
+      "home_minus_official_rounded_max_abs": 0.000040000000000000105,
+      "initial_joint_pos_rel_max_abs": 0.0,
+      "initial_obs_0_6": [
+        0.0,
+        0.0,
+        0.0,
+        -0.0,
+        -0.0,
+        -1.0
+      ],
+      "mujoco_warnings_during_case": 0,
+      "n_fail_steps": 0,
+      "push_vx_at_1s": 0.0,
+      "qpos_csv": "stand_zero.qpos.csv",
+      "series_csv": "stand_zero.series.csv",
+      "steps": 200,
+      "tilt_deg": {
+        "final": 0.3855709040010712,
+        "max": 1.0796469190457922,
+        "p95": 0.6158654755106946
+      },
+      "wall_clock_ms": {
+        "max": 0.235012,
+        "over_20ms": 0,
+        "p50": 0.161532,
+        "p95": 0.19550504999999996,
+        "p99": 0.22208175999999988,
+        "scope": "rust Policy::infer plus 4 mj_step calls; not the board"
+      }
+    }
+  },
+  "claim": "Rust Policy::infer called mj_step through plant_step_n. XML position PD, flat scene_walk, one deterministic run. Not BAM, not rough, not backlash, not board realtime, not an acceptance pass.",
+  "control_dt_s": 0.02,
+  "decimation": 4,
+  "dropped_frame_policy": "logical ticks are never dropped, so dropped_frames is 0 even if a tick overruns the wall-clock budget",
+  "exception_policy": "an inference error or a non-finite state stops that case, is written into failures.json, and the process exits 2 after the report is on disk",
+  "git_head": "480010239600bdde609456a423479c449b7533dc",
+  "intra_op_threads": 1,
+  "joint_order": [
+    "left_hip_yaw",
+    "left_hip_roll",
+    "left_hip_pitch",
+    "left_knee",
+    "left_ankle",
+    "neck_pitch",
+    "head_pitch",
+    "head_yaw",
+    "head_roll",
+    "right_hip_yaw",
+    "right_hip_roll",
+    "right_hip_pitch",
+    "right_knee",
+    "right_ankle"
+  ],
+  "logical_hz": 50.0,
+  "loop_state": "feed-forward graph; Policy has no reset. Each case zeroes last_action and reloads the STAND keyframe.",
+  "model_sha256": "ce894d30b3343036d499bfac1102bdaa58d59a21c1b58401ecb70fb6a2f63e0a",
+  "multi_seed": false,
+  "normalization": "raw 61-vector into the ONNX graph; Sub/Div lives inside the file and this loop does not normalize again",
+  "onnx_metadata_action_scale": 1.0,
+  "physics_dt_s": 0.005,
+  "policy": "velstand",
+  "roller_mode": false,
+  "rustc": "rustc 1.89.0 (29483883e 2025-08-04)",
+  "scene": "/agent/repos/microduck-hd1910m/microduck_rl/src/mjlab_microduck/robot/microduck/scene_walk.xml",
+  "seed": null,
+  "seeds_executed": 1,
+  "status": "executed_not_acceptance",
+  "terrain": "flat plane in scene_walk.xml",
+  "timeout_policy": "a control tick whose wall time exceeds 20 ms is a timeout. Physics steps are not skipped."
+}

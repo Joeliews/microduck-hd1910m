@@ -40,3 +40,15 @@ rustypot = "1.6.0"
 serialport = { version = "4.8", default-features = false }
 libc = "0.2"
 sha2 = "0.11.0"
+
+[features]
+# Compiles the MuJoCo plant and links libmujoco. Off for ordinary tests: those must
+# build on a machine that does not have MuJoCo installed.
+mujoco-plant = []
+
+[[example]]
+name = "xl330_velstand_mujoco"
+required-features = ["mujoco-plant"]
+
+[build-dependencies]
+cc = "1.2"
