@@ -19,6 +19,7 @@
 | [rounds/round-07.md](rounds/round-07.md) | 第 7 轮：官方植物 Rust 接线被挡住 |
 | [rounds/round-08.md](rounds/round-08.md) | 第 8 轮：官方植物在 ready 前失败 |
 | [rounds/round-09.md](rounds/round-09.md) | 第 9 轮：官方植物在 env.reset 失败 |
+| [rounds/round-10.md](rounds/round-10.md) | 第 10 轮：官方植物短闭环跑完，墙钟 20 ms 未达到 |
 | [evidence/xl330-velstand-cpu-r1/](evidence/xl330-velstand-cpu-r1/) | Python CPU MuJoCo 短评估，未重跑 |
 | [evidence/xl330-velstand-rust-r1/](evidence/xl330-velstand-rust-r1/) | Rust `Policy::infer` + `mj_step` |
 
