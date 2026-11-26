@@ -12,7 +12,7 @@
 | --- | --- |
 | 分支 | `cursor/xl330-velstand-acceptance-dbeb` |
 | 执行 agent | `bc-38c4813c-8721-55a8-89ed-76296786dbeb` |
-| Cursor 线程 / 任务 | 待协调器填写 |
+| Cursor 线程 / 任务 | 线程 XL330 velstand criteria，agent `bc-38c4813c-8721-55a8-89ed-76296786dbeb`；任务 MH-1，version 2 |
 | 日期 | 2026-11-26 |
 
 ## 日志
