@@ -1,0 +1,160 @@
+{
+  "status": "executed_not_acceptance",
+  "claim": "CPU MuJoCo XML position-actuator loop ran. Not BAM, not rough, not backlash, not mjlab, not Rust, not board 50 Hz, not a matrix pass.",
+  "policy": "velstand",
+  "model_sha256": "ce894d30b3343036d499bfac1102bdaa58d59a21c1b58401ecb70fb6a2f63e0a",
+  "onnxruntime": "1.23.2",
+  "mujoco": "3.3.7",
+  "providers": [
+    "CPUExecutionProvider"
+  ],
+  "intra_op_note": "session options left at ONNX Runtime defaults; intra_op thread count was not pinned",
+  "graph_input": "obs",
+  "graph_input_shape": [
+    1,
+    61
+  ],
+  "graph_output": "actions",
+  "python": "3.12.3",
+  "platform": "Linux-6.12.113+-x86_64-with-glibc2.39",
+  "scene": "/agent/repos/microduck-hd1910m/microduck_rl/src/mjlab_microduck/robot/microduck/scene_walk.xml",
+  "scene_walk_git_blob": "7aa25e52b609da73d759c7adc99233c7e63239bc",
+  "robot_walk_git_blob": "96de481cce278f089145cf07b7088b173a7bbede",
+  "official_microduck_rl_commit_for_xml": "53fb7d115b1be79c6d07e8fd4eab311285e16f2a",
+  "plant": {
+    "xml": "scene_walk.xml + robot_walk.xml chosen_actuator position kp=0.55 forcerange=\u00b10.96",
+    "not_used": [
+      "Rhoban BAM M6",
+      "robot_allcollisions_backlash.xml",
+      "rough terrain",
+      "domain randomization",
+      "deployment head lowpass 0.5 and leg lowpass 0.7",
+      "walking action_scale 0.9"
+    ],
+    "physics_dt_s": 0.005,
+    "decimation": 4,
+    "control_dt_s": 0.02,
+    "logical_hz": 50.0,
+    "action_scale": 1.0,
+    "command": "twist 0, head 0, body 0",
+    "sensor_noise": "XML noise zeroed for a deterministic run",
+    "seed": null,
+    "seeds_executed": 1,
+    "multi_seed": false
+  },
+  "joint_order": [
+    "left_hip_yaw",
+    "left_hip_roll",
+    "left_hip_pitch",
+    "left_knee",
+    "left_ankle",
+    "neck_pitch",
+    "head_pitch",
+    "head_yaw",
+    "head_roll",
+    "right_hip_yaw",
+    "right_hip_roll",
+    "right_hip_pitch",
+    "right_knee",
+    "right_ankle"
+  ],
+  "home_from_stand_keyframe": [
+    0.0,
+    -0.08726646259971647,
+    -0.457924,
+    -0.00494,
+    0.452984,
+    0.3490658503988659,
+    0.3490658503988659,
+    0.0,
+    0.0,
+    0.0,
+    0.08726646259971647,
+    0.457924,
+    0.00494,
+    -0.452984
+  ],
+  "home_minus_official_rounded_max_abs": 4.0000000000000105e-05,
+  "mujoco_gl": "osmesa",
+  "camera": "free lookat trunk_base, distance 0.45 m, azimuth 140, elevation -15; 480x360 every 5th control step",
+  "render_error": null,
+  "session_intra_op_num_threads": 0,
+  "cases": {
+    "stand_zero": {
+      "push_vx_at_1s": 0.0,
+      "steps": 200,
+      "duration_s": 4.0,
+      "initial_obs_0_6": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "initial_joint_pos_rel_max_abs": 0.0,
+      "height_m": {
+        "min": 0.1152978156291092,
+        "max": 0.11850648007622858,
+        "final": 0.1157697362842574
+      },
+      "tilt_deg": {
+        "max": 1.079559176161128,
+        "final": 0.3856295453008921,
+        "p95": 0.6158396870802677
+      },
+      "action_abs_max": 0.21183715760707855,
+      "fell": false,
+      "n_fail_steps": 0,
+      "first_failure": null,
+      "wall_clock_ms": {
+        "p50": 0.21021850000124687,
+        "p95": 0.26817825000478007,
+        "p99": 0.6373242500029288,
+        "max": 4.285488999983045,
+        "over_20ms": 0,
+        "scope": "python onnx + 4 mujoco substeps; not Rust; not the board"
+      },
+      "video_gif": "stand_zero.gif",
+      "series_npz": "stand_zero.npz"
+    },
+    "stand_push_0.3mps": {
+      "push_vx_at_1s": 0.3,
+      "steps": 200,
+      "duration_s": 4.0,
+      "initial_obs_0_6": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "initial_joint_pos_rel_max_abs": 0.0,
+      "height_m": {
+        "min": 0.1152978156291092,
+        "max": 0.12356642870152634,
+        "final": 0.1157769883644087
+      },
+      "tilt_deg": {
+        "max": 3.6652735665387546,
+        "final": 0.3926690241331742,
+        "p95": 2.380753421508363
+      },
+      "action_abs_max": 1.073024034500122,
+      "fell": false,
+      "n_fail_steps": 0,
+      "first_failure": null,
+      "wall_clock_ms": {
+        "p50": 0.21178599999416292,
+        "p95": 0.2571758000073032,
+        "p99": 0.27603820000251744,
+        "max": 0.42585200003486534,
+        "over_20ms": 0,
+        "scope": "python onnx + 4 mujoco substeps; not Rust; not the board"
+      },
+      "video_gif": "stand_push_0.3mps.gif",
+      "series_npz": "stand_push_0.3mps.npz"
+    }
+  }
+}

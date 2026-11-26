@@ -1,0 +1,17 @@
+# XL330 / HD-1910 闭环验收
+
+本目录是 Fork `Joeliews/microduck-hd1910m` 上的闭环验收底稿。官方仓只读：`pollen-robotics/microduck`、`pollen-robotics/microduck_rl`。飞特仓里的 `microduck_rl/` 是适配树，不是官方训练栈。
+
+| 文件 | 内容 |
+| --- | --- |
+| [acceptance-criteria.md](acceptance-criteria.md) | 可执行验收标准 |
+| [policy-matrix-20.md](policy-matrix-20.md) | 2 舵机 × 10 策略，20 格 |
+| [version-freeze.md](version-freeze.md) | 官方 runtime 与官方 `microduck_rl` 版本冻结 |
+| [servo-xl330.md](servo-xl330.md) | XL330 参数冻结 |
+| [servo-hd1910.md](servo-hd1910.md) | HD-1910 参数冻结、谱系、待实测 |
+| [rounds/round-01.md](rounds/round-01.md) | 第 1 轮计划、标识、日志、产物、审查、下一步 |
+| [evidence/xl330-velstand-cpu-r1/](evidence/xl330-velstand-cpu-r1/) | XL330 velstand 的 CPU MuJoCo 短评估 |
+
+短评估脚本：`scripts/closed_loop/eval_xl330_velstand_cpu.py`。
+
+已核对的离线推理对照在项目 store，路径 `/cursor/stores/bc-b174b37c-5d88-5df4-8c97-7e4424b6d372/internal/verified-evidence/`。那些结果是同一观测序列上的 Rust / Python 动作对照，不是 MuJoCo 动作成功，也不是板端 50 Hz。
