@@ -13,6 +13,7 @@
 | [rounds/round-01.md](rounds/round-01.md) | 第 1 轮：Python 短评估 |
 | [rounds/round-02.md](rounds/round-02.md) | 第 2 轮：Rust 控制核心接 MuJoCo |
 | [rounds/round-03.md](rounds/round-03.md) | 第 3 轮：官方植物多种子零样本，未通过 |
+| [rounds/round-04.md](rounds/round-04.md) | 第 4 轮：官方 PPO 短训冒烟，未通过 |
 | [evidence/xl330-velstand-cpu-r1/](evidence/xl330-velstand-cpu-r1/) | Python CPU MuJoCo 短评估，未重跑 |
 | [evidence/xl330-velstand-rust-r1/](evidence/xl330-velstand-rust-r1/) | Rust `Policy::infer` + `mj_step` |
 
