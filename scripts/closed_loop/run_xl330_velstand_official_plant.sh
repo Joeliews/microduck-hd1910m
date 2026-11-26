@@ -23,7 +23,13 @@ if [[ -z "$PYTHON" ]]; then
   exit 2
 fi
 ONNX="${ONNX:-/tmp/microduck-policies/velstand.onnx}"
-OUT="${OUT:-$ROOT/docs/closed-loop/evidence/xl330-velstand-official-plant-r1}"
+OUT="${OUT:-$HOME/microduck-loop/evidence/2026-11-26/official-velstand-rust-official-plant-r3}"
+case "$(basename "$OUT")" in
+  official-velstand-rust-official-plant|official-velstand-rust-official-plant-r2)
+    echo "refusing to overwrite r1 or r2: $OUT" >&2
+    exit 2
+    ;;
+esac
 export ORT_DYLIB_PATH="${ORT_DYLIB_PATH:-}"
 if [[ -z "$ORT_DYLIB_PATH" ]]; then
   echo "Set ORT_DYLIB_PATH to libonnxruntime.so (floor 1.23)." >&2

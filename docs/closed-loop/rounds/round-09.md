@@ -55,3 +55,7 @@ ValueError: Event term 'topple_push' not found in active terms.
 `report.md` SHA256 `1d53171ca280d6b7656c701df2045a2589de3eaadf4540c4fba841891417f3e6`。
 
 不要覆盖 r1（`official-velstand-rust-official-plant`）或这次的 r2。
+
+随后的提交在删掉 `push_robot` / `topple_push` 之后，把课程项里 `event_name` 已经不在事件表中的项一并去掉，并在 `topple_push_range` 仍挂着时失败退出。短闭环不再把 topple kick 加回去。BAM、`0daab160`、rough、0.005 s × 4、SHA 和 14 关节门禁没有放宽。云端没有在 RTX 5090 上重跑，不能写成已经成功。
+
+本机重跑必须写到新目录，例如 `/home/a/microduck-loop/evidence/2026-11-26/official-velstand-rust-official-plant-r3/`。脚本默认就是这个 r3 路径，并拒绝 r1 和 r2。仍要：用户空间 rustup 1.89、`ORT_DYLIB_PATH`、`MICRODUCK_RL_OFFICIAL` 指向未改写的 `0daab160`、`OFFICIAL_RL_PYTHON` 指向 official-rl 的 python3。然后跑 `scripts/closed_loop/run_xl330_velstand_official_plant.sh`。不要动 Ubuntu 26.04，不要覆盖 `official-cu`，不要停 AgentsDock。

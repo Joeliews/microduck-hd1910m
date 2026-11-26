@@ -37,7 +37,7 @@
 | 策略 | 物理要求 | ONNX / 合同 | MuJoCo 行为 | 零样本 | 重训检查点 | 导出数值对照 | Rust×MuJoCo 50 Hz |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | alpha_walking | 行走模型 | 摘录 | 未执行 | 未执行 | 未执行 | 沿用离线对照 | 未执行 |
-| velstand | 第 3 轮是 BAM M6 + rough + all-collisions backlash。先前云端短跑仍是平地 XML-PD，只作对照 | 摘录 | 官方植物多种子已记录（未通过） | 官方植物多种子已记录（未通过） | 约100轮短训已记录（预留种子评估未通过） | 沿用离线对照 | 短闭环已记录（XML-PD，非通过；官方植物本机重跑在 env.reset() 前失败（topple_push 已被 pop，课程项 topple_push_range 仍在）；待修，本机未再跑） |
+| velstand | 第 3 轮是 BAM M6 + rough + all-collisions backlash。先前云端短跑仍是平地 XML-PD，只作对照 | 摘录 | 官方植物多种子已记录（未通过） | 官方植物多种子已记录（未通过） | 约100轮短训已记录（预留种子评估未通过） | 沿用离线对照 | 短闭环已记录（XML-PD，非通过；官方植物本机重跑在 env.reset() 前失败（topple_push 已被 pop，课程项 topple_push_range 仍在）；悬挂课程项已去掉，本机未再跑） |
 | alpha_stand | 站立模型 | 摘录 | 未执行 | 未执行 | 未执行 | 沿用离线对照 | 未执行 |
 | roller | 必须是滑轮模型 | 摘录 | 未执行 | 未执行 | 未执行 | 沿用离线对照 | 未执行 |
 | alpha_sitstand | 坐站相位 | 摘录 | 未执行 | 未执行 | 未执行 | 沿用离线对照 | 未执行 |

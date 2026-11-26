@@ -89,12 +89,33 @@ def build_env(device: str, seed: int):
         fail(f"actuators {actuator_names} are not Backlash encoder BAM")
     for key in ("fallen_too_long", "time_out", "fell_over"):
         cfg.terminations.pop(key, None)
+    # A 4 s window should not be kicked by the training pushes. Dropping the
+    # event without its curriculum term makes reset call push_curriculum and
+    # raise "Event term 'topple_push' not found".
     for key in ("push_robot", "topple_push"):
         cfg.events.pop(key, None)
+    drop_curricula_for_missing_events(cfg)
     cfg.scene.num_envs = 1
     cfg.seed = seed
     env = ManagerBasedRlEnv(cfg=cfg, device=device)
     return env, dt, decimation, actuator_names
+
+
+def curriculum_event_name(term):
+    params = getattr(term, "params", None)
+    if isinstance(params, dict):
+        return params.get("event_name")
+    return getattr(params, "event_name", None)
+
+
+def drop_curricula_for_missing_events(cfg) -> None:
+    active = set(cfg.events)
+    for name in list(cfg.curriculum):
+        event_name = curriculum_event_name(cfg.curriculum[name])
+        if event_name is not None and event_name not in active:
+            cfg.curriculum.pop(name)
+    if "topple_push" not in cfg.events and "topple_push_range" in cfg.curriculum:
+        fail("topple_push_range is still registered after topple_push was removed")
 
 
 def as_list(tensor) -> list[float]:
