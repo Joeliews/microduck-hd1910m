@@ -18,6 +18,7 @@
 | [rounds/round-06.md](rounds/round-06.md) | 第 6 轮：短训导出的预留种子评估，未通过 |
 | [rounds/round-07.md](rounds/round-07.md) | 第 7 轮：官方植物 Rust 接线被挡住 |
 | [rounds/round-08.md](rounds/round-08.md) | 第 8 轮：官方植物在 ready 前失败 |
+| [rounds/round-09.md](rounds/round-09.md) | 第 9 轮：官方植物在 env.reset 失败 |
 | [evidence/xl330-velstand-cpu-r1/](evidence/xl330-velstand-cpu-r1/) | Python CPU MuJoCo 短评估，未重跑 |
 | [evidence/xl330-velstand-rust-r1/](evidence/xl330-velstand-rust-r1/) | Rust `Policy::infer` + `mj_step` |
 
