@@ -8,6 +8,7 @@
 - `沿用离线对照`：store 里 Rust / Python 合成观测序列比特一致。不是 MuJoCo，不是 50 Hz。
 - `短评估已记录`：Python 侧 CPU MuJoCo 跑过，见证据目录。不是通过。
 - `短闭环已记录`：Rust 控制核心调用了 `mj_step`。不是通过。
+- `官方植物多种子已记录（未通过）`：官方 bench 植物上的多种子零样本已记录。不是通过。
 - `未执行`：没有跑。空着，不填成通过。
 
 通过线在 `acceptance-criteria.md`。本表没有一格是通过。
@@ -34,7 +35,7 @@
 | 策略 | 物理要求 | ONNX / 合同 | MuJoCo 行为 | 零样本 | 重训检查点 | 导出数值对照 | Rust×MuJoCo 50 Hz |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | alpha_walking | 行走模型 | 摘录 | 未执行 | 未执行 | 未执行 | 沿用离线对照 | 未执行 |
-| velstand | 训练植物是 rough + all-collisions backlash + BAM。云端两次短跑都是平地 `scene_walk.xml` 位置 PD | 摘录 | 短评估已记录 | 短评估已记录 | 未执行 | 沿用离线对照 | 短闭环已记录（XML-PD，非通过） |
+| velstand | 第 3 轮是 BAM M6 + rough + all-collisions backlash。先前云端短跑仍是平地 XML-PD，只作对照 | 摘录 | 官方植物多种子已记录（未通过） | 官方植物多种子已记录（未通过） | 未执行 | 沿用离线对照 | 短闭环已记录（XML-PD，非通过） |
 | alpha_stand | 站立模型 | 摘录 | 未执行 | 未执行 | 未执行 | 沿用离线对照 | 未执行 |
 | roller | 必须是滑轮模型 | 摘录 | 未执行 | 未执行 | 未执行 | 沿用离线对照 | 未执行 |
 | alpha_sitstand | 坐站相位 | 摘录 | 未执行 | 未执行 | 未执行 | 沿用离线对照 | 未执行 |
@@ -44,7 +45,7 @@
 | ball_kick_left | 含球模型 | 摘录 | 未执行 | 未执行 | 未执行 | 沿用离线对照 | 未执行 |
 | ball_kick_right | 含球模型 | 摘录 | 未执行 | 未执行 | 未执行 | 沿用离线对照 | 未执行 |
 
-XL330 `velstand` 的 Python 短评估仍是 `evidence/xl330-velstand-cpu-r1/`，没有重跑，也不是通过。Rust 闭环是 `evidence/xl330-velstand-rust-r1/`，见 `rounds/round-02.md`。那次墙钟 p99 低于 20 ms、超时和丢帧都是 0，但只有一个确定性种子、平地 XML 位置 PD，不满足 `acceptance-criteria.md` 第 2 节，所以 Rust 列不标通过。
+XL330 `velstand` 的 Python 短评估仍是 `evidence/xl330-velstand-cpu-r1/`，没有重跑，也不是通过。Rust 闭环是 `evidence/xl330-velstand-rust-r1/`，见 `rounds/round-02.md`，仍是「短闭环已记录（XML-PD，非通过）」。官方植物多种子零样本见 `rounds/round-03.md`，结论 `executed_not_acceptance`，不是通过。重训仍是未执行。表中没有一格是通过。
 
 ## HD-1910
 
