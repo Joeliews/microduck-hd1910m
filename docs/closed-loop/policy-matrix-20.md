@@ -37,7 +37,7 @@
 | 策略 | 物理要求 | ONNX / 合同 | MuJoCo 行为 | 零样本 | 重训检查点 | 导出数值对照 | Rust×MuJoCo 50 Hz |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | alpha_walking | 行走模型 | 摘录 | 未执行 | 未执行 | 未执行 | 沿用离线对照 | 未执行 |
-| velstand | 第 3 轮是 BAM M6 + rough + all-collisions backlash。先前云端短跑仍是平地 XML-PD，只作对照 | 摘录 | 官方植物多种子已记录（未通过） | 官方植物多种子已记录（未通过） | 约100轮短训已记录（预留种子评估未通过） | 沿用离线对照 | 短闭环已记录（XML-PD，非通过）；官方植物本机短闭环已记录（executed_not_acceptance；逻辑 50 Hz 跑完 200 步，墙钟 20 ms 未达到，over_20ms=200） |
+| velstand | 第 3 轮是 BAM M6 + rough + all-collisions backlash。先前云端短跑仍是平地 XML-PD，只作对照 | 摘录 | 官方植物多种子已记录（未通过） | 官方植物多种子已记录（未通过） | 约100轮短训已记录（预留种子评估未通过） | 沿用离线对照 | 短闭环已记录（XML-PD，非通过）；官方植物本机短闭环 r4 已记录（executed_not_acceptance；逻辑 50 Hz 跑完 200 步，墙钟 20 ms 未达到，over_20ms=200；瓶颈是官方 env.step p50 约 33.29 ms，不是 Rust infer p50 约 0.097 ms） |
 | alpha_stand | 站立模型 | 摘录 | 未执行 | 未执行 | 未执行 | 沿用离线对照 | 未执行 |
 | roller | 必须是滑轮模型 | 摘录 | 未执行 | 未执行 | 未执行 | 沿用离线对照 | 未执行 |
 | alpha_sitstand | 坐站相位 | 摘录 | 未执行 | 未执行 | 未执行 | 沿用离线对照 | 未执行 |
@@ -47,7 +47,7 @@
 | ball_kick_left | 含球模型 | 摘录 | 未执行 | 未执行 | 未执行 | 沿用离线对照 | 未执行 |
 | ball_kick_right | 含球模型 | 摘录 | 未执行 | 未执行 | 未执行 | 沿用离线对照 | 未执行 |
 
-XL330 `velstand` 的 Python 短评估仍是 `evidence/xl330-velstand-cpu-r1/`，没有重跑，也不是通过。Rust 闭环是 `evidence/xl330-velstand-rust-r1/`，见 `rounds/round-02.md`，仍是「短闭环已记录（XML-PD，非通过）」。官方植物多种子零样本见 `rounds/round-03.md`，结论 `executed_not_acceptance`，不是通过。第 4 轮短训冒烟见 `rounds/round-04.md`，第 5 轮约 100 轮续训见 `rounds/round-05.md`，第 6 轮预留种子评估见 `rounds/round-06.md`。三轮结论都是 `executed_not_acceptance`。第 7 轮见 `rounds/round-07.md`，结论是 `blocked`。第 8 轮见 `rounds/round-08.md`，结论是 `failed`：官方植物在 `ready` 前因 `JointPositionAction` 没有 `_joint_names` 而停住。第 9 轮见 `rounds/round-09.md`，结论是 `failed`：关节名已经过了，`env.reset()` 仍去找被删掉的 `topple_push`。第 10 轮见 `rounds/round-10.md`，结论是 `executed_not_acceptance`：官方植物本机短闭环逻辑 50 Hz 跑完 200 步，墙钟 20 ms 未达到（`over_20ms=200`）。这不是 50 Hz 墙钟验收通过。XML-PD 短闭环不是那份植物的证据，也没有被改标。行为和零样本仍是官方已发布权重、种子 0/1/2 的结果，不是短训导出 `cf280a27…`。表中没有一格是通过。
+XL330 `velstand` 的 Python 短评估仍是 `evidence/xl330-velstand-cpu-r1/`，没有重跑，也不是通过。Rust 闭环是 `evidence/xl330-velstand-rust-r1/`，见 `rounds/round-02.md`，仍是「短闭环已记录（XML-PD，非通过）」。官方植物多种子零样本见 `rounds/round-03.md`，结论 `executed_not_acceptance`，不是通过。第 4 轮短训冒烟见 `rounds/round-04.md`，第 5 轮约 100 轮续训见 `rounds/round-05.md`，第 6 轮预留种子评估见 `rounds/round-06.md`。三轮结论都是 `executed_not_acceptance`。第 7 轮见 `rounds/round-07.md`，结论是 `blocked`。第 8 轮见 `rounds/round-08.md`，结论是 `failed`：官方植物在 `ready` 前因 `JointPositionAction` 没有 `_joint_names` 而停住。第 9 轮见 `rounds/round-09.md`，结论是 `failed`：关节名已经过了，`env.reset()` 仍去找被删掉的 `topple_push`。第 10 轮见 `rounds/round-10.md`，结论是 `executed_not_acceptance`：官方植物本机短闭环逻辑 50 Hz 跑完 200 步，墙钟 20 ms 未达到（`over_20ms=200`）。第 11 轮见 `rounds/round-11.md`，结论仍是 `executed_not_acceptance`：r4 的分步计时显示瓶颈是官方 `env.step` p50 33.294259454123676 ms，不是 Rust `infer` p50 0.096796 ms。20 ms 预算没有放宽。这不是 50 Hz 墙钟验收通过。XML-PD 短闭环不是那份植物的证据，也没有被改标。行为和零样本仍是官方已发布权重、种子 0/1/2 的结果，不是短训导出 `cf280a27…`。表中没有一格是通过。
 
 ## HD-1910
 

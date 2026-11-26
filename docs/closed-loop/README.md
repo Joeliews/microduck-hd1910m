@@ -20,6 +20,7 @@
 | [rounds/round-08.md](rounds/round-08.md) | 第 8 轮：官方植物在 ready 前失败 |
 | [rounds/round-09.md](rounds/round-09.md) | 第 9 轮：官方植物在 env.reset 失败 |
 | [rounds/round-10.md](rounds/round-10.md) | 第 10 轮：官方植物短闭环跑完，墙钟 20 ms 未达到 |
+| [rounds/round-11.md](rounds/round-11.md) | 第 11 轮：r4 分步计时，瓶颈在官方 env.step |
 | [evidence/xl330-velstand-cpu-r1/](evidence/xl330-velstand-cpu-r1/) | Python CPU MuJoCo 短评估，未重跑 |
 | [evidence/xl330-velstand-rust-r1/](evidence/xl330-velstand-rust-r1/) | Rust `Policy::infer` + `mj_step` |
 
