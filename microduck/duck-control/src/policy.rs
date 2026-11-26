@@ -248,7 +248,9 @@ const XGO_BAM_STEP_TASK: &str = "Mjlab-Step-Flat-MicroDuck-XgoBam-P6";
 
 fn coherent_joint_snapshot_contract(value: Option<&str>) -> Result<bool, PolicyError> {
     match value {
-        None => Ok(false),
+        // `ort` reports a missing custom-metadata key as an empty string. Official XL330
+        // exports do not carry this key; that is the legacy snapshot, not an unknown contract.
+        None | Some("") => Ok(false),
         Some("coherent_pos_vel_delay_v1") => Ok(true),
         Some(other) => Err(PolicyError::Inference(format!("unknown joint snapshot contract: {other}"))),
     }
@@ -257,6 +259,7 @@ fn coherent_joint_snapshot_contract(value: Option<&str>) -> Result<bool, PolicyE
 #[test]
 fn joint_snapshot_contract_preserves_legacy_and_rejects_unknown_versions() {
     assert!(!coherent_joint_snapshot_contract(None).unwrap());
+    assert!(!coherent_joint_snapshot_contract(Some("")).unwrap());
     assert!(coherent_joint_snapshot_contract(Some("coherent_pos_vel_delay_v1")).unwrap());
     assert!(coherent_joint_snapshot_contract(Some("unknown_v2")).is_err());
 }
