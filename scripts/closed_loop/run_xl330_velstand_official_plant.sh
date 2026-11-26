@@ -23,10 +23,10 @@ if [[ -z "$PYTHON" ]]; then
   exit 2
 fi
 ONNX="${ONNX:-/tmp/microduck-policies/velstand.onnx}"
-OUT="${OUT:-$HOME/microduck-loop/evidence/2026-11-26/official-velstand-rust-official-plant-r3}"
+OUT="${OUT:-$HOME/microduck-loop/evidence/2026-11-26/official-velstand-rust-official-plant-r4}"
 case "$(basename "$OUT")" in
-  official-velstand-rust-official-plant|official-velstand-rust-official-plant-r2)
-    echo "refusing to overwrite r1 or r2: $OUT" >&2
+  official-velstand-rust-official-plant|official-velstand-rust-official-plant-r2|official-velstand-rust-official-plant-r3)
+    echo "refusing to overwrite r1, r2, or r3: $OUT" >&2
     exit 2
     ;;
 esac

@@ -17,6 +17,7 @@ import os
 import socket
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 EXPECTED_COMMIT = "0daab160d3fb1c2cbaba16a4a19052f36709dd9e"
@@ -244,8 +245,12 @@ def serve(host: str, port: int, device: str, seed: int) -> None:
                 send(sense(env))
             elif op == "step":
                 action = scatter(msg["action"], index, len(action_names)).to(env.device).unsqueeze(0)
+                started = time.perf_counter()
                 env.step(action)
-                send(sense(env))
+                env_step_ms = (time.perf_counter() - started) * 1e3
+                payload = sense(env)
+                payload["env_step_ms"] = env_step_ms
+                send(payload)
             elif op == "close":
                 send({"ok": True})
                 return

@@ -74,3 +74,9 @@ CurriculumManager 有 19 个活跃项，没有 `topple_push_range`。日志里 `
 - `C:\Users\A\microduck-loop\evidence\2026-11-26\official-velstand-rust-official-plant-r3\`
 
 r3 `report.md` SHA256 `98d7f55028fc8383d561a3614ec0b4e035d58710fd372424cd9b318efee5f5e8`。r1 的 `report.md` 仍是 `91d3e1d2fc046fa02c546fc554fdf0d59b9761d75fbbb060e3723470fb038075`。r2 仍是 `1d53171ca280d6b7656c701df2045a2589de3eaadf4540c4fba841891417f3e6`。
+
+随后的提交只给下一次 r4 加逐步墙钟。本机还没有跑 r4。20 ms 预算没有放宽。云端没有重跑 GPU，时序也没有写成已经修好。
+
+每步会写入证据目录的 `step_times.json`。`total_ms` 是 `Policy::infer` 加上一次 sidecar 往返。`infer_ms` 只含 `Policy::infer`。`step_round_trip_ms` 是这一次 sidecar RPC。`env_step_ms` 是植物自己包住 `env.step` 的时间，不含 JSON 和 `sense()`。`metrics.json` 里的 p50/p95/p99/max 和 `over_20ms` 仍按 `total_ms` 算，`over_20ms` 仍是 `total_ms > 20`。这些分位可以从 `step_times.json` 的原始数组复算。
+
+本机 r4 必须写到新目录，例如 `/home/a/microduck-loop/evidence/2026-11-26/official-velstand-rust-official-plant-r4/`。脚本默认就是这个路径，并拒绝 r1、r2、r3。仍要：用户空间 rustup 1.89、`ORT_DYLIB_PATH`、`MICRODUCK_RL_OFFICIAL` 指向未改写的 `0daab160`、`OFFICIAL_RL_PYTHON` 指向 official-rl 的 python3。然后跑 `scripts/closed_loop/run_xl330_velstand_official_plant.sh`。不要覆盖 r1、r2、r3。不要动 Ubuntu 26.04，不要覆盖 `official-cu`，不要停 AgentsDock。

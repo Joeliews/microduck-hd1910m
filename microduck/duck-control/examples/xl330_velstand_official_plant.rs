@@ -106,7 +106,10 @@ fn run() -> Result<(), String> {
     let mut state = rpc(&mut reader, &mut writer, json!({"op": "reset"}))?;
     let mut last_action = [0.0f32; 14];
     let steps = (DURATION_S / CONTROL_DT).round() as usize;
-    let mut wall_ms = Vec::with_capacity(steps);
+    let mut total_ms = Vec::with_capacity(steps);
+    let mut infer_ms = Vec::with_capacity(steps);
+    let mut round_trip_ms = Vec::with_capacity(steps);
+    let mut env_step_ms: Vec<Option<f64>> = Vec::with_capacity(steps);
     let mut height = Vec::with_capacity(steps);
     let mut tilt = Vec::with_capacity(steps);
     let mut first_failure = Value::Null;
@@ -134,9 +137,15 @@ fn run() -> Result<(), String> {
                 break;
             }
         };
+        let infer_elapsed = t0.elapsed().as_secs_f64() * 1e3;
         last_action = action;
+        let t_rpc = Instant::now();
         state = rpc(&mut reader, &mut writer, json!({"op": "step", "action": action}))?;
-        wall_ms.push(t0.elapsed().as_secs_f64() * 1e3);
+        let rpc_elapsed = t_rpc.elapsed().as_secs_f64() * 1e3;
+        total_ms.push(t0.elapsed().as_secs_f64() * 1e3);
+        infer_ms.push(infer_elapsed);
+        round_trip_ms.push(rpc_elapsed);
+        env_step_ms.push(state.get("env_step_ms").and_then(Value::as_f64));
         if state.get("ok") == Some(&Value::Bool(false)) {
             exception = true;
             first_failure = json!({"step": step, "error": state});
@@ -155,7 +164,19 @@ fn run() -> Result<(), String> {
         }
     }
     let _ = rpc(&mut reader, &mut writer, json!({"op": "close"}));
-    let over = wall_ms.iter().filter(|v| **v > 20.0).count();
+    let over = total_ms.iter().filter(|v| **v > 20.0).count();
+    let step_times = json!({
+        "unit": "ms",
+        "budget_ms": 20.0,
+        "over_20ms_rule": "count of total_ms strictly greater than 20.0; the budget is not loosened",
+        "percentile": "linear interpolation between nearest ranks on the sorted sample, same function as metrics.json",
+        "scope": "total_ms is Policy::infer plus one sidecar env.step round trip. infer_ms is only Policy::infer. step_round_trip_ms is the sidecar RPC. env_step_ms is the plant timer around env.step and omits JSON and sense().",
+        "total_ms": total_ms.clone(),
+        "infer_ms": infer_ms.clone(),
+        "step_round_trip_ms": round_trip_ms.clone(),
+        "env_step_ms": env_step_ms.clone(),
+    });
+    fs::write(out.join("step_times.json"), serde_json::to_string_pretty(&step_times).unwrap() + "\n").map_err(|e| e.to_string())?;
     let report = json!({
         "status": "executed_not_acceptance",
         "claim": "Rust Policy::infer drove the official BAM rough backlash sidecar. Not an acceptance pass, not the flat XML-PD loop, not a claim that this cloud VM ran the user's GPU.",
@@ -176,12 +197,16 @@ fn run() -> Result<(), String> {
         "exception": exception,
         "first_failure": first_failure,
         "wall_clock_ms": {
-            "p50": percentile(&wall_ms, 50.0),
-            "p95": percentile(&wall_ms, 95.0),
-            "p99": percentile(&wall_ms, 99.0),
-            "max": vmax(&wall_ms),
+            "p50": percentile(&total_ms, 50.0),
+            "p95": percentile(&total_ms, 95.0),
+            "p99": percentile(&total_ms, 99.0),
+            "max": vmax(&total_ms),
             "over_20ms": over,
             "scope": "rust infer plus one official env.step round trip; not the board",
+            "samples": "step_times.json",
+            "infer_ms": timing_summary(&infer_ms),
+            "step_round_trip_ms": timing_summary(&round_trip_ms),
+            "env_step_ms": timing_summary_opt(&env_step_ms),
         },
         "dropped_frames": 0,
         "dropped_frame_policy": "logical ticks are not skipped; an overrun is a timeout, not a dropped physics step",
@@ -251,6 +276,25 @@ fn observation(q: &[f64; 14], qd: &[f64; 14], home: &[f64; 14], gyro: [f64; 3], 
     let _ = DEFAULT_POSITION;
     let imu = ImuData { gyro, gravity, quat: [1.0, 0.0, 0.0, 0.0] };
     Observation::build(&imu, &with_mouth(q), &with_mouth(qd), &with_mouth(home), last, &ObsCommand::default())
+}
+
+fn timing_summary(values: &[f64]) -> Value {
+    if values.is_empty() {
+        return json!({"p50": null, "p95": null, "p99": null, "max": null});
+    }
+    json!({
+        "p50": percentile(values, 50.0),
+        "p95": percentile(values, 95.0),
+        "p99": percentile(values, 99.0),
+        "max": vmax(values),
+    })
+}
+
+fn timing_summary_opt(values: &[Option<f64>]) -> Value {
+    let present: Vec<f64> = values.iter().copied().flatten().filter(|v| v.is_finite()).collect();
+    let mut summary = timing_summary(&present);
+    summary["missing"] = json!(values.len() - present.len());
+    summary
 }
 
 fn percentile(values: &[f64], q: f64) -> f64 {
