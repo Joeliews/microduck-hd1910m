@@ -5,6 +5,7 @@
 | 文件 | 内容 |
 | --- | --- |
 | [acceptance-criteria.md](acceptance-criteria.md) | 可执行验收标准 |
+| [self-built-eval-protocol.md](self-built-eval-protocol.md) | 九个策略的自建验收，不是官方路径 |
 | [standing-goals.md](standing-goals.md) | 持续目标、自动推进与约束 |
 | [policy-matrix-20.md](policy-matrix-20.md) | 2 舵机 × 10 策略，20 格 |
 | [version-freeze.md](version-freeze.md) | 官方 runtime 与官方 `microduck_rl` 版本冻结 |
@@ -28,6 +29,8 @@
 | [rounds/round-14.md](rounds/round-14.md) | 第 14 轮：官方植物闭环 ONNX 对照已记录，不是通过 |
 | [rounds/round-15.md](rounds/round-15.md) | 第 15 轮：官方评估路径盘点，不是一次评估 |
 | [rounds/round-16.md](rounds/round-16.md) | 第 16 轮：HD-1910 官方 BAM 先验与接线，不是跑程 |
+| [rounds/round-17.md](rounds/round-17.md) | 第 17 轮：九个策略的自建验收标准，尚未本机执行 |
+| [rounds/round-18.md](rounds/round-18.md) | 第 18 轮：墙钟拆分写法，不是 20 ms 再试 |
 | [evidence/xl330-velstand-cpu-r1/](evidence/xl330-velstand-cpu-r1/) | Python CPU MuJoCo 短评估，未重跑 |
 | [evidence/xl330-velstand-rust-r1/](evidence/xl330-velstand-rust-r1/) | Rust `Policy::infer` + `mj_step` |
 

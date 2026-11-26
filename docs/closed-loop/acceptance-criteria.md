@@ -56,3 +56,7 @@
 ## 7. 本轮短评估不满足的条目
 
 `scripts/closed_loop/eval_xl330_velstand_cpu.py` 只覆盖 XL330 `velstand` 的一个确定性平地循环：零命令 4 s，以及 1 s 时沿 x 加 0.3 m/s 的一次脉冲。植物是与官方 commit `53fb7d1` blob 一致的 `scene_walk.xml` 位置执行器，不是 BAM，不是 rough，不是 backlash。种子没有抽多颗。Rust 没有进环。因此第 2、4、6 节都不通过。数字见 `evidence/xl330-velstand-cpu-r1/metrics.json`。
+
+## 8. 自建入口
+
+没有官方专门 bench 的九个策略，按第 2、3 节评，不降低门槛。任务号、预留种子 20/21/22 和「这不是官方路径」写在 `self-built-eval-protocol.md`。墙钟仍按第 6 节，p99 ≤ 20 ms 且超时和丢帧都为 0 才可以写主机墙钟没有超出预算。训练 actor 对 ONNX 仍按第 5 节，并且和 Rust 重放分开记。
