@@ -259,6 +259,8 @@ fn run() -> Result<(), String> {
             "p99": percentile(&total_ms, 99.0),
             "max": vmax(&total_ms),
             "over_20ms": over,
+            "timeouts": over,
+            "timeout_rule": "timeouts count total_ms strictly greater than 20; the budget is not loosened",
             "scope": "rust infer plus one official env.step round trip; not the board",
             "samples": "step_times.json",
             "infer_ms": timing_summary(&infer_ms),

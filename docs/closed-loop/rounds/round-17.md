@@ -8,4 +8,4 @@
 
 没有 manifest 或烘焙 `task_id` 的策略，Flat/Rough/Backlash 不能悄悄假定。roller 的烘焙任务号是 `Mjlab-Velocity-Swizzle-MicroDuck`，不是 stride rollers，但仍然必须用滑轮物理。BallKick 只有一个任务号。
 
-本轮写下标准时，入口脚本还没有落地，本机也没有跑。
+随后的提交把入口放在 `scripts/closed_loop/self_built_eval.py`。没有 `SELF_BUILT_EVAL_RUN=1` 时不建环境、不写分数。授权之后若看不到 61 维部署观测，或不能确认命令接口，就停，不写通过。本机还没有跑。

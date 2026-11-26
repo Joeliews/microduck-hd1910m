@@ -24,3 +24,5 @@
 训练 actor 对导出 ONNX 是另一件事。官方 `0daab160` 没有这条数值通过线。本仓库 `acceptance-criteria.md` 第 5 节的逐步 max abs ≤ 1e-5 是项目自定义门槛，只表示导出数值，不表示动作成功，也不表示墙钟通过。证据文件必须和 Rust 重放的 `compare_report.json` 分开。
 
 官方植物不得悄悄退回 XML 位置 PD。
+
+`scripts/closed_loop/analyze_step_times.py` 只读已有的 `step_times.json`，按同一线性插值重算 p50/p95/p99/max。`timeouts` 与 `over_20ms` 都是 `total_ms > 20` 的次数。它不启动植物。下一次 Rust 记录会带上 `timeouts` 字段，和 `over_20ms` 同一计数。训练 actor 对 ONNX 的入口是 `scripts/closed_loop/compare_actor_onnx.py`，证据名应是 `actor_onnx_report.json`，没有 `ACTOR_ONNX_COMPARE_RUN=1` 时不写结果。这两条都还没有在本机跑出新数。
