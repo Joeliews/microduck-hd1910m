@@ -5,6 +5,7 @@
 | 文件 | 内容 |
 | --- | --- |
 | [acceptance-criteria.md](acceptance-criteria.md) | 可执行验收标准 |
+| [standing-goals.md](standing-goals.md) | 持续目标、自动推进与约束 |
 | [policy-matrix-20.md](policy-matrix-20.md) | 2 舵机 × 10 策略，20 格 |
 | [version-freeze.md](version-freeze.md) | 官方 runtime 与官方 `microduck_rl` 版本冻结 |
 | [servo-xl330.md](servo-xl330.md) | XL330 参数冻结 |
