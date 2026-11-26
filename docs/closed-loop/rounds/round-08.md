@@ -49,4 +49,6 @@ AttributeError: 'JointPositionAction' object has no attribute '_joint_names'
 
 ## 还缺什么
 
-关节名解析修好之后，仍要在本机用 official-rl 的 Python 和同一官方检出重跑。云端没有这次重跑，不能写成已经成功。
+随后的提交按 mjlab 1.3.0 的 `target_names` / `_target_names`，否则用 `_entity.joint_names` 配 `_target_ids`，不再读 `_joint_names`。缺任何一个策略关节就退出。云端没有在 RTX 5090 上重跑，不能写成已经成功。
+
+本机重跑仍要：用户空间 rustup 1.89、`ORT_DYLIB_PATH`、`MICRODUCK_RL_OFFICIAL` 指向未改写的 `0daab160`，以及 `OFFICIAL_RL_PYTHON` 指向 official-rl 的 python3，而不是系统解释器。然后跑 `scripts/closed_loop/run_xl330_velstand_official_plant.sh`。不要动 Ubuntu 26.04，不要覆盖 `official-cu`，不要停 AgentsDock。

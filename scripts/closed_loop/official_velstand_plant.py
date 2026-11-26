@@ -148,13 +148,40 @@ def scatter(action: list[float], index: dict[str, int], width: int):
     return out
 
 
+def action_joint_names(term) -> list[str]:
+    """Names in JointPositionAction order.
+
+    mjlab 1.3.0 stores them on BaseAction as ``_target_names`` and exposes
+    ``target_names``. It does not have ``joint_names`` or ``_joint_names``.
+    ``_target_ids`` index ``_entity.joint_names`` in that same order.
+    """
+    public = getattr(term, "target_names", None)
+    if public:
+        return [str(name) for name in public]
+    stored = getattr(term, "_target_names", None)
+    if stored:
+        return [str(name) for name in stored]
+    entity = getattr(term, "_entity", None)
+    ids = getattr(term, "_target_ids", None)
+    if entity is None or ids is None:
+        fail("JointPositionAction has no target_names, _target_names, or _entity/_target_ids")
+    joint_names = list(entity.joint_names)
+    resolved = []
+    for raw in ids.detach().cpu().reshape(-1):
+        index = int(raw)
+        if index < 0 or index >= len(joint_names):
+            fail(f"action target id {index} is outside joint_names ({len(joint_names)})")
+        resolved.append(joint_names[index])
+    return resolved
+
+
 def serve(host: str, port: int, device: str, seed: int) -> None:
     root = require_official_checkout()
     sys.path.insert(0, str(root / "src"))
     os.chdir(root)
     env, dt, decimation, actuators = build_env(device, seed)
     term = env.action_manager.get_term("joint_pos")
-    action_names = list(getattr(term, "joint_names", None) or term._joint_names)
+    action_names = action_joint_names(term)
     missing = [name for name in POLICY_JOINTS if name not in action_names]
     if missing:
         fail(f"action term is missing {missing}")

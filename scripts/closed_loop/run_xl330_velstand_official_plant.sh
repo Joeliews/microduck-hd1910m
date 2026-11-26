@@ -11,9 +11,15 @@ if [[ -z "${MICRODUCK_RL_OFFICIAL:-}" ]]; then
   echo "Do not point it at this fork's microduck_rl/." >&2
   exit 2
 fi
-if ! command -v rustc >/dev/null 2>&1; then
+if ! command -v rustc >/dev/null 2>&1 && ! command -v rustup >/dev/null 2>&1; then
   echo "rustc is missing. In this user account only:" >&2
   echo "  curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain 1.89.0" >&2
+  exit 2
+fi
+PYTHON="${OFFICIAL_RL_PYTHON:-}"
+if [[ -z "$PYTHON" ]]; then
+  echo "Set OFFICIAL_RL_PYTHON to the official-rl environment python3." >&2
+  echo "Do not point it at the system interpreter." >&2
   exit 2
 fi
 ONNX="${ONNX:-/tmp/microduck-policies/velstand.onnx}"
@@ -26,7 +32,7 @@ fi
 mkdir -p "$OUT"
 cd "$ROOT/microduck"
 cargo +1.89.0 build --release --example xl330_velstand_official_plant -p duck-control
-python3 "$ROOT/scripts/closed_loop/official_velstand_plant.py" --port 0 >"$OUT/sidecar.log" 2>&1 &
+"$PYTHON" "$ROOT/scripts/closed_loop/official_velstand_plant.py" --port 0 >"$OUT/sidecar.log" 2>&1 &
 SIDE=$!
 cleanup() { kill "$SIDE" >/dev/null 2>&1 || true; }
 trap cleanup EXIT
