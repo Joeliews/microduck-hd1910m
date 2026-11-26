@@ -15,6 +15,7 @@
 | [rounds/round-03.md](rounds/round-03.md) | 第 3 轮：官方植物多种子零样本，未通过 |
 | [rounds/round-04.md](rounds/round-04.md) | 第 4 轮：官方 PPO 短训冒烟，未通过 |
 | [rounds/round-05.md](rounds/round-05.md) | 第 5 轮：约 100 轮续训，未通过 |
+| [rounds/round-06.md](rounds/round-06.md) | 第 6 轮：短训导出的预留种子评估，未通过 |
 | [evidence/xl330-velstand-cpu-r1/](evidence/xl330-velstand-cpu-r1/) | Python CPU MuJoCo 短评估，未重跑 |
 | [evidence/xl330-velstand-rust-r1/](evidence/xl330-velstand-rust-r1/) | Rust `Policy::infer` + `mj_step` |
 

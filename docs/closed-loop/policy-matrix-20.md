@@ -10,7 +10,7 @@
 - `短闭环已记录`：Rust 控制核心调用了 `mj_step`。不是通过。
 - `官方植物多种子已记录（未通过）`：官方 bench 植物上的多种子零样本已记录。不是通过。
 - `短训冒烟已记录（未通过）`：官方 PPO 只跑了 2+2 轮冒烟。不是通过，也不表示零样本失败已修好。
-- `约100轮短训已记录（未通过）`：从冒烟检查点续上约 100 轮。不是通过，不是全量 6000 轮，导出 ONNX 不是官方 velstand。
+- `约100轮短训已记录（预留种子评估未通过）`：从冒烟检查点续上约 100 轮，并用预留种子评过短训导出。不是通过。该导出不是官方 velstand，不覆盖官方权重的行为/零样本格。
 - `未执行`：没有跑。空着，不填成通过。
 
 通过线在 `acceptance-criteria.md`。本表没有一格是通过。
@@ -37,7 +37,7 @@
 | 策略 | 物理要求 | ONNX / 合同 | MuJoCo 行为 | 零样本 | 重训检查点 | 导出数值对照 | Rust×MuJoCo 50 Hz |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | alpha_walking | 行走模型 | 摘录 | 未执行 | 未执行 | 未执行 | 沿用离线对照 | 未执行 |
-| velstand | 第 3 轮是 BAM M6 + rough + all-collisions backlash。先前云端短跑仍是平地 XML-PD，只作对照 | 摘录 | 官方植物多种子已记录（未通过） | 官方植物多种子已记录（未通过） | 约100轮短训已记录（未通过） | 沿用离线对照 | 短闭环已记录（XML-PD，非通过） |
+| velstand | 第 3 轮是 BAM M6 + rough + all-collisions backlash。先前云端短跑仍是平地 XML-PD，只作对照 | 摘录 | 官方植物多种子已记录（未通过） | 官方植物多种子已记录（未通过） | 约100轮短训已记录（预留种子评估未通过） | 沿用离线对照 | 短闭环已记录（XML-PD，非通过） |
 | alpha_stand | 站立模型 | 摘录 | 未执行 | 未执行 | 未执行 | 沿用离线对照 | 未执行 |
 | roller | 必须是滑轮模型 | 摘录 | 未执行 | 未执行 | 未执行 | 沿用离线对照 | 未执行 |
 | alpha_sitstand | 坐站相位 | 摘录 | 未执行 | 未执行 | 未执行 | 沿用离线对照 | 未执行 |
@@ -47,7 +47,7 @@
 | ball_kick_left | 含球模型 | 摘录 | 未执行 | 未执行 | 未执行 | 沿用离线对照 | 未执行 |
 | ball_kick_right | 含球模型 | 摘录 | 未执行 | 未执行 | 未执行 | 沿用离线对照 | 未执行 |
 
-XL330 `velstand` 的 Python 短评估仍是 `evidence/xl330-velstand-cpu-r1/`，没有重跑，也不是通过。Rust 闭环是 `evidence/xl330-velstand-rust-r1/`，见 `rounds/round-02.md`，仍是「短闭环已记录（XML-PD，非通过）」。官方植物多种子零样本见 `rounds/round-03.md`，结论 `executed_not_acceptance`，不是通过。第 4 轮短训冒烟见 `rounds/round-04.md`，第 5 轮约 100 轮续训见 `rounds/round-05.md`。两轮结论都是 `executed_not_acceptance`，不表示零样本失败已修好。行为和零样本仍是官方已发布权重的结果，不是短训导出。表中没有一格是通过。
+XL330 `velstand` 的 Python 短评估仍是 `evidence/xl330-velstand-cpu-r1/`，没有重跑，也不是通过。Rust 闭环是 `evidence/xl330-velstand-rust-r1/`，见 `rounds/round-02.md`，仍是「短闭环已记录（XML-PD，非通过）」。官方植物多种子零样本见 `rounds/round-03.md`，结论 `executed_not_acceptance`，不是通过。第 4 轮短训冒烟见 `rounds/round-04.md`，第 5 轮约 100 轮续训见 `rounds/round-05.md`，第 6 轮预留种子评估见 `rounds/round-06.md`。三轮结论都是 `executed_not_acceptance`。行为和零样本仍是官方已发布权重、种子 0/1/2 的结果，不是短训导出 `cf280a27…`。表中没有一格是通过。
 
 ## HD-1910
 
