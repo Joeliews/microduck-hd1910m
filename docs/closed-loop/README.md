@@ -21,6 +21,7 @@
 | [rounds/round-09.md](rounds/round-09.md) | 第 9 轮：官方植物在 env.reset 失败 |
 | [rounds/round-10.md](rounds/round-10.md) | 第 10 轮：官方植物短闭环跑完，墙钟 20 ms 未达到 |
 | [rounds/round-11.md](rounds/round-11.md) | 第 11 轮：r4 分步计时，瓶颈在官方 env.step |
+| [rounds/round-12.md](rounds/round-12.md) | 第 12 轮：官方权重预留种子 10/11/12，未通过 |
 | [evidence/xl330-velstand-cpu-r1/](evidence/xl330-velstand-cpu-r1/) | Python CPU MuJoCo 短评估，未重跑 |
 | [evidence/xl330-velstand-rust-r1/](evidence/xl330-velstand-rust-r1/) | Rust `Policy::infer` + `mj_step` |
 
