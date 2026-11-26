@@ -23,6 +23,7 @@
 | [rounds/round-11.md](rounds/round-11.md) | 第 11 轮：r4 分步计时，瓶颈在官方 env.step |
 | [rounds/round-12.md](rounds/round-12.md) | 第 12 轮：官方权重预留种子 10/11/12，未通过 |
 | [rounds/round-13.md](rounds/round-13.md) | 第 13 轮：官方植物闭环 ONNX 对照接线，尚未本机执行 |
+| [rounds/round-14.md](rounds/round-14.md) | 第 14 轮：官方植物闭环 ONNX 对照已记录，不是通过 |
 | [evidence/xl330-velstand-cpu-r1/](evidence/xl330-velstand-cpu-r1/) | Python CPU MuJoCo 短评估，未重跑 |
 | [evidence/xl330-velstand-rust-r1/](evidence/xl330-velstand-rust-r1/) | Rust `Policy::infer` + `mj_step` |
 
