@@ -32,4 +32,4 @@
 
 ## 缺的一步
 
-还没有一次由 Rust 控制节拍驱动、植物确认为 BAM M6 + all-collisions backlash + rough 的短闭环。补上接线之后，仍要在本机官方检出上执行；云端没有用户的 RTX 5090，不能把没跑的结果写成已经跑过。
+还没有一次由 Rust 控制节拍驱动、植物确认为 BAM M6 + all-collisions backlash + rough 的短闭环。随后的提交加入了 sidecar `scripts/closed_loop/official_velstand_plant.py` 和 Rust 客户端 `xl330_velstand_official_plant`。本轮结论仍是 `blocked`：云端没有用官方检出跑过，也不能把没跑的结果写成已经跑过。本机还要装用户空间 rustup 1.89、设置 `ORT_DYLIB_PATH`，并把 `MICRODUCK_RL_OFFICIAL` 指到 `0daab160` 的官方检出后执行 `scripts/closed_loop/run_xl330_velstand_official_plant.sh`。不要动 Ubuntu 26.04，不要覆盖 `official-cu`，不要停 AgentsDock。
